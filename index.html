@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odido Case Analyse | ICT Portaal</title>
+    <style>
+        :root {
+            --cyber-neon: #00f2ff; 
+            --dark-bg: #020617;
+            --quiz-pink: #ff007f;
+            --correct: #2ecc71;
+            --wrong: #e74c3c;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--dark-bg);
+            color: white;
+            scroll-behavior: smooth;
+            overflow: hidden; 
+        }
+
+        /* --- HOOFDPAGINA --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(2, 6, 23, 0.6), rgba(2, 6, 23, 0.6)), 
+                        url('fotos/background.png.png'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            border-bottom: 3px solid var(--cyber-neon);
+        }
+
+        .status-box {
+            color: var(--cyber-neon);
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--cyber-neon);
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            color: var(--cyber-neon);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px var(--cyber-neon), 0 0 20px var(--cyber-neon), 0 0 40px var(--cyber-neon);
+            margin-bottom: 25px;
+        }
+
+        .btn-start {
+            padding: 18px 50px;
+            background: transparent;
+            border: 3px solid var(--cyber-neon);
+            color: var(--cyber-neon);
+            text-decoration: none;
+            font-weight: 900;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+        }
+
+        /* --- TWEEDE PAGINA (CIRKELS) --- */
+        .analysis-section {
+            height: 100vh;
+            width: 100vw;
+            background: linear-gradient(rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.8)), 
+                        url('fotos/background.png.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        .unique-circle {
+            position: absolute;
+            width: 260px; height: 260px; 
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 3px solid var(--cyber-neon);
+            display: flex;
+            justify-content: center; align-items: center; text-align: center;
+            padding: 35px; color: white; text-decoration: none;
+            font-weight: 900; font-size: 1rem;
+            transition: 0.4s;
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.2);
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .c1 { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border-color: #fff; box-shadow: 0 0 35px rgba(255,255,255,0.4); font-size: 1.2rem;} 
+        .c2 { top: 10%; right: 15%; } 
+        .c3 { top: 15%; left: 10%; }  
+        .c4 { bottom: 15%; left: 15%; } 
+        .c5 { bottom: 10%; right: 10%; } 
+
+        /* --- INFORMATIE OVERLAYS --- */
+        .info-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('fotos/background.png.png');
+            background-size: cover;
+            background-position: center;
+            display: none; 
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .info-content {
+            background: rgba(2, 6, 23, 0.96);
+            border: 2px solid var(--cyber-neon);
+            padding: 40px;
+            max-width: 1100px;
+            width: 90%;
+            display: flex;
+            gap: 40px;
+            box-shadow: 0 0 50px rgba(0, 242, 255, 0.4);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            align-items: center;
+        }
+
+        .info-text { flex: 1.6; }
+        .info-images-col { flex: 1; display: flex; flex-direction: column; gap: 20px; text-align: center; }
+        .info-images-col img { width: 100%; border: 1px solid var(--cyber-neon); }
+
+        .info-content h2 { color: var(--cyber-neon); font-size: 1.8rem; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 10px var(--cyber-neon); }
+        .info-content h3 { color: var(--cyber-neon); margin: 15px 0 10px 0; border-bottom: 1px solid var(--cyber-neon); display: inline-block;}
+        .info-content p, .info-content ol, .info-content ul { font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
+
+        .btn-back-cyber {
+            display: inline-block; margin-top: 20px; padding: 10px 30px; border: 1px solid var(--cyber-neon);
+            color: var(--cyber-neon); text-transform: uppercase; font-weight: bold; cursor: pointer;
+            background: transparent; transition: 0.3s; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+        }
+
+        .quiz-btn {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            border: 3px solid var(--quiz-pink); color: var(--quiz-pink);
+            padding: 15px 50px; border-radius: 50px; text-decoration: none; font-weight: bold;
+            background: transparent; cursor: pointer;
+        }
+
+        .ans-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .ans-btn { padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--cyber-neon); color: white; cursor: pointer; text-align: left; }
+        .correct { background: var(--correct) !important; color: black; }
+        .wrong { background: var(--wrong) !important; }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <div class="status-box">SYSTEM STATUS: BREACH DETECTED</div>
+        <h1>ODIDO CASE ANALYSE</h1>
+        <p>Cybersecurity & Data Protection Rapport 2026</p>
+        <br>
+        <a href="#analyse" class="btn-start">START ANALYSE</a>
+    </section>
+
+    <section id="analyse" class="analysis-section">
+        <div class="unique-circle c1" onclick="openBox('box1')">WAT IS ER GEBEURD?</div>
+        <div class="unique-circle c2" onclick="openBox('box2')">GESTOLEN GEGEVENS EN HUN BELANG</div>
+        <div class="unique-circle c3" onclick="openBox('box3')">ACTIES OM JEZELF TE BESCHERMEN</div>
+        <div class="unique-circle c4" onclick="openBox('box4')">RECHTEN VAN DE BURGER BIJ EEN DATALEK</div>
+        <div class="unique-circle c5" onclick="openBox('box5')">PLICHTEN VAN EEN BEDRIJF (AVG)</div>
+        <button class="quiz-btn" onclick="openBox('boxQuiz')">START DE QUIZ</button>
+    </section>
+
+    <div id="box1" class="info-overlay">
+        <div class="info-content">
+            <div class="info-text">
+                <h2>Het Odido datalek (2026)</h2>
+                <p>In februari 2026 werd telecombedrijf Odido gehackt. Hackers hebben de gegevens van miljoenen klanten gestolen en op internet gezet.</p>
+                <button class="btn-back-cyber" onclick="closeBox('box1')">← BACK TO SYSTEM</button>
+            </div>
+            <div class="info-images-col"><img src="fotos/background.png.7.png"></div>
+        </div>
+    </div>
+
+    <div id="box2" class="info-overlay">
+        <div class="info-content">
+            <div class="info-text">
+                <h2>Welke gegevens zijn gestolen en waarom zijn ze belangrijk?</h2>
+                <h3>Gestolen gegevens</h3>
+                <ul>
+                    <li>Naam</li>
+                    <li>Adres</li>
+                    <li>Telefoonnummer</li>
+                    <li>E-mail</li>
+                    <li>Bankrekening (IBAN)</li>
+                    <li>Geboortedatum</li>
+                    <li>Paspoort- of ID-nummer</li>
+                </ul>
+                <h3>Waarom belangrijk?</h3>
+                <ul>
+                    <li>Iemand kan zich voordoen als jou → identiteitsfraude</li>
+                    <li>Nep-berichten sturen → phishing</li>
+                    <li>Geld proberen te stelen → financieel misbruik</li>
+                </ul>
+                <p style="font-size: 0.8rem;">Bron: <a href="https://www.odido.nl/veiligheid" target="_blank" style="color: var(--cyber-neon);">https://www.odido.nl/veiligheid</a></p>
+                <button class="btn-back-cyber" onclick="closeBox('box2')">← BACK TO SYSTEM</button>
+            </div>
+            <div class="info-images-col">
+                <img src="fotos/background.png2.png">
+                <img src="fotos/background.png4.png">
+            </div>
+        </div>
+    </div>
+
+    <div id="box3" class="info-overlay">
+        <div class="info-content">
+            <div class="info-text">
+                <h2>Wat kun je zelf doen?</h2>
+                <p><strong>Tips om je te beschermen:</strong></p>
+                <ol>
+                    <li>Klik niet zomaar op links in mails of sms → kan phishing zijn</li>
+                    <li>Gebruik verschillende sterke wachtwoorden voor elk account</li>
+                    <li>Controleer je bankrekening op vreemde betalingen</li>
+                    <li>Meld fraude als iemand jouw gegevens gebruikt</li>
+                    <li>Kijk of je gegevens zijn gelekt via websites zoals “Have I Been Pwned”</li>
+                </ol>
+                <h3>Snelle Tips</h3>
+                <ul>
+                    <li>Sterke wachtwoorden gebruiken</li>
+                    <li>Niet op onbekende links klikken</li>
+                    <li>Bankrekening regelmatig controleren</li>
+                </ul>
+                <p style="font-size: 0.8rem; margin-top: 15px;">
+                    Bron: <a href="https://www.odido.nl/veiligheid" target="_blank" style="color: var(--cyber-neon);">odido.nl/veiligheid</a>
+                </p>
+                <button class="btn-back-cyber" onclick="closeBox('box3')">← BACK TO SYSTEM</button>
+            </div>
+            <div class="info-images-col"><img src="fotos/background.png1.png"><img src="fotos/background.png5.png"></div>
+        </div>
+    </div>
+
+    <div id="box4" class="info-overlay">
+        <div class="info-content">
+            <div class="info-text">
+                <h2>Welke plichten heeft Odido?</h2>
+                <ul>
+                    <li>Zorg dragen dat je gegevens veilig zijn</li>
+                    <li>Een datalek melden binnen 72 uur</li>
+                    <li>Klanten vertellen dat hun gegevens zijn gelekt</li>
+                    <li>Opschrijven wat er is gebeurd en maatregelen nemen</li>
+                    <li>Proberen verdere schade te voorkomen</li>
+                    <li>Eventueel schadevergoeding betalen als klanten schade hebben</li>
+                </ul>
+                <p>Als bedrijven dit niet doen, kunnen ze boetes krijgen.</p>
+                <p style="font-size: 0.8rem;">Bron: <a href="https://www.edpb.europa.eu/sme-data-protection-guide/data-breaches_nl" target="_blank" style="color: var(--cyber-neon);">edpb.europa.eu/data-breaches_nl</a></p>
+                <button class="btn-back-cyber" onclick="closeBox('box4')">← BACK TO SYSTEM</button>
+            </div>
+            <div class="info-images-col"><img src="fotos/background.png3.png"></div>
+        </div>
+    </div>
+
+    <div id="box5" class="info-overlay">
+        <div class="info-content">
+            <div class="info-text">
+                <h2>Welke rechten heb je als burger?</h2>
+                <ul>
+                    <li>Weten wat een bedrijf van jou heeft</li>
+                    <li>Fouten laten aanpassen (correctie)</li>
+                    <li>Je gegevens laten verwijderen (vergeten)</li>
+                    <li>Je gegevens meenemen naar een ander bedrijf</li>
+                    <li>Zeggen dat je niet wilt dat ze je gegevens gebruiken (bezwaar)</li>
+                    <li>Schadevergoeding krijgen als je geld of andere schade hebt door het datalek</li>
+                </ul>
+                <p>Bij een datalek moet het bedrijf je laten weten dat jouw gegevens zijn gestolen.</p>
+                <p style="font-size: 0.8rem;">Bron: <a href="https://www.edpb.europa.eu/sme-data-protection-guide/respect-individuals-rights_nl" target="_blank" style="color: var(--cyber-neon);">edpb.europa.eu/respect-rights_nl</a></p>
+                <button class="btn-back-cyber" onclick="closeBox('box5')">← BACK TO SYSTEM</button>
+            </div>
+            <div class="info-images-col"><img src="fotos/background.png6.png"></div>
+        </div>
+    </div>
+
+    <div id="boxQuiz" class="info-overlay">
+        <div class="info-content">
+            <div class="info-text" style="width:100%">
+                <p id="q-counter" style="color: var(--cyber-neon);">Vraag 1 van 10</p>
+                <h2 id="q-text">Vraag komt hier...</h2>
+                <div class="ans-grid" id="ans-grid"></div>
+                <button id="next-btn" style="display:none; margin-top:20px; padding:10px; background:var(--quiz-pink); border:none; color:white; cursor:pointer; width:100%">VOLGENDE VRAAG</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openBox(id) { document.getElementById(id).style.display = "flex"; if(id==='boxQuiz') startQuiz(); }
+        function closeBox(id) { document.getElementById(id).style.display = "none"; }
+
+        const quizData = [
+            { q: "In welke maand en welk jaar werd Odido gehackt?", a: ["Januari 2025", "Februari 2026", "Februari 2025", "Maart 2026"], c: 1 },
+            { q: "Welk specifiek nummer kan worden gebruikt voor identiteitsfraude?", a: ["IBAN-nummer", "Klantnummer", "Telefoonnummer", "Paspoort- of ID-nummer"], c: 3 },
+            { q: "Wat is een gevaar van het lekken van je e-mail volgens de info?", a: ["Trager internet", "Geen toegang tot bank", "Phishing via nep-berichten", "Wachtwoord verlies"], c: 2 },
+            { q: "Hoeveel uur heeft Odido om een datalek officieel te melden?", a: ["24 uur", "48 uur", "72 uur", "96 uur"], c: 2 },
+            { q: "Welk recht heb je als er fouten in jouw gegevens staan?", a: ["Recht op bezwaar", "Recht op correctie", "Recht op inzage", "Recht op schadevergoeding"], c: 1 },
+            { q: "Wat is tip nummer 5 bij 'Wat kun je zelf doen'?", a: ["Meld fraude", "Check Have I Been Pwned", "Sterke wachtwoorden", "Controleer bank"], c: 1 },
+            { q: "Wat kan een bedrijf krijgen als ze zich niet aan de AVG-plichten houden?", a: ["Een waarschuwing", "Een boete", "Geen licentie meer", "Een claim"], c: 1 },
+            { q: "Welk recht heb je als je je gegevens wilt verhuizen naar een ander bedrijf?", a: ["Recht om vergeten te worden", "Recht op bezwaar", "Gegevens meenemen naar ander bedrijf", "Recht op inzage"], c: 2 },
+            { q: "Waarvoor kan een gestolen IBAN (bankrekening) worden misbruikt?", a: ["Phishing", "Financieel misbruik", "Identiteitsfraude", "Nep-advertenties"], c: 1 },
+            { q: "Wanneer moet een bedrijf je laten weten dat je gegevens zijn gestolen?", a: ["Bij elk klein lek", "Alleen bij financiële schade", "Bij een datalek", "Alleen op verzoek"], c: 2 }
+        ];
+
+        let cur = 0;
+        function startQuiz() { cur=0; showQ(); }
+        function showQ() {
+            const q = quizData[cur]; 
+            document.getElementById('q-counter').innerText = "Vraag " + (cur + 1) + " van 10";
+            document.getElementById('q-text').innerText = q.q;
+            const grid = document.getElementById('ans-grid'); grid.innerHTML = "";
+            document.getElementById('next-btn').style.display = "none";
+            q.a.forEach((opt, i) => {
+                const btn = document.createElement('button'); btn.className='ans-btn'; btn.innerText=opt;
+                btn.onclick = () => { 
+                    const allBtns = grid.querySelectorAll('button');
+                    allBtns.forEach(b => b.style.pointerEvents = "none");
+                    if(i===q.c) { 
+                        btn.classList.add('correct'); 
+                        document.getElementById('next-btn').style.display="block"; 
+                    } else { 
+                        btn.classList.add('wrong'); 
+                        setTimeout(() => { 
+                            btn.classList.remove('wrong'); 
+                            allBtns.forEach(b => b.style.pointerEvents = "auto");
+                        }, 1000);
+                    } 
+                };
+                grid.appendChild(btn);
+            });
+        }
+        document.getElementById('next-btn').onclick = () => { 
+            cur++; 
+            if(cur < quizData.length) {
+                showQ(); 
+            } else { 
+                document.getElementById('q-text').innerText = "Quiz voltooid! Je bent nu een expert op het gebied van dataveiligheid.";
+                document.getElementById('ans-grid').innerHTML = "";
+                document.getElementById('next-btn').innerText = "SLUIT QUIZ";
+                document.getElementById('next-btn').onclick = () => closeBox('boxQuiz');
+            } 
+        };
+    </script>
+</body>
+</html>
